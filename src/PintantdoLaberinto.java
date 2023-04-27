@@ -5,8 +5,8 @@ import javax.swing.*;
 
 public class PintantdoLaberinto {
 
-    int x = 0;
-    int y = 0;
+    int x = 60;
+    int y = 50;
     int tecla;
     int width = 900;
     int heigth = 900;
@@ -15,7 +15,13 @@ public class PintantdoLaberinto {
     boolean colisionArriba = false;
     boolean colisionAbajo = false;
     Rect p = new Rect(90,50,50,200, Color.BLUE);
+    Rect pDos = new Rect(200,50,50,200, Color.PINK);
+
+    Rect pLista[][] = new Rect[4][4];
     Rect r;
+    int mapa[][] = {{0,0,0,0},
+                    {1,1,0,1},
+                    {1,1,0,1}};
     public class MyGraphics extends JComponent {
 
 
@@ -31,6 +37,15 @@ public class PintantdoLaberinto {
             g.fillRect(r.x, r.y, r.w, r.h);
             g.setColor(p.c);
             g.fillRect(p.x, p.y, p.w, p.h);
+            g.setColor(pDos.c);
+            g.fillRect(pDos.x,pDos.y,pDos.w,pDos.h);
+            g.setColor(Color.CYAN);
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j< mapa.length; j++){
+                    pLista[i][j] = new Rect(j*20, i*20, 10,10, Color.CYAN);
+                    g.fillRect(j*20,i*20,10,10);
+                }
+            }
             //87,65,83,68
         }
     }
@@ -51,27 +66,27 @@ public class PintantdoLaberinto {
                 tecla = e.getKeyCode();
                 int teclaAnterior;
                 if ((e.getKeyCode() == 87 || e.getKeyCode() == 38) && y > 0){
-                    if (!r.colisionArriba(p)){
+                    if (!r.colisionLabAbajo(pLista)){
                         y-=10;
                     }
                     System.out.println("ColArr"+colisionArriba);
                 }
                 if ((e.getKeyCode() == 65 || e.getKeyCode() == 37) && x > 0){
-                    if (!r.colisionIzquierda(p)){
+                    if (!r.colisionLabIzquierda(pLista)){
                         x-=10;
                     }
                     System.out.println("ColIzq"+colisionIzq);
 
                 }
                 if (e.getKeyCode() == 83 && y<430){
-                    if (!r.colisionAbajo(p)){
+                    if (!r.colisionLabAbajo(pLista)){
                         y+=10;
                     }
                     System.out.println("ColAb"+colisionAbajo);
 
                 }
                 if (e.getKeyCode() == 68 && x < 450){
-                    if (!r.colisionDerecha(p)){
+                    if (!r.colisionLabDerecha(pLista)){
                         x+=10;
                     }
                     System.out.println("ColDersdd"+colisionDer);
@@ -151,20 +166,49 @@ public class PintantdoLaberinto {
             return false;
         }
 
-    }
-    public void colisionesCuatroLados(int t){
-        switch (t){
-            case 87:
-                break;
-            case 65:
-                break;
-            case 83:
-                break;
-            case 68:
-                break;
+        public Boolean colisionLabArriba(Rect target[][]){
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j< mapa.length; j++){
+                    if (this.colisionArriba(target[i][j]) == true){
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
-    }
 
+        public Boolean colisionLabAbajo(Rect target[][]){
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j< mapa.length; j++){
+                    if (this.colisionAbajo(target[i][j]) == true){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public Boolean colisionLabIzquierda(Rect target[][]){
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j< mapa.length; j++){
+                    if (this.colisionIzquierda(target[i][j]) == true){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public Boolean colisionLabDerecha(Rect target[][]){
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j< mapa.length; j++){
+                    if (this.colisionDerecha(target[i][j]) == true){
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
