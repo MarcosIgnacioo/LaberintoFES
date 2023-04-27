@@ -111,8 +111,30 @@ public class PintantdoLaberinto {
             this.c = c;
         }
         public Boolean collision(Rect target){
-            if (this.x < target.x + target.w  +10 && this.x + this.w+10> target.x
-                    && this.y < target.y + target.h +10 && this.h+10 +this.y > target.y){
+            if (this.x < target.x + target.w  +10 && this.x + this.w> target.x
+                    && this.y < target.y + target.h  && this.h +this.y > target.y){
+                return true;
+            }
+            return false;
+        }
+        public Boolean collisionDer(Rect target){
+            if (this.x < target.x + target.w   && this.x + this.w +10> target.x
+                    && this.y < target.y + target.h  && this.h +this.y > target.y){
+                return true;
+            }
+            return false;
+        }
+
+        public Boolean colisiont(Rect target){
+            if (this.x < target.x + target.w   && this.x + this.w > target.x
+                    && this.y < target.y + target.h +10 && this.h +this.y > target.y){
+                return true;
+            }
+            return false;
+        }
+        public Boolean colisiontd(Rect target){
+            if (this.x < target.x + target.w   && this.x + this.w > target.x
+                    && this.y < target.y + target.h && this.h +this.y  +10 > target.y){
                 return true;
             }
             return false;
@@ -122,11 +144,11 @@ public class PintantdoLaberinto {
     public void colisionesCuatroLados(int t){
         switch (t){
             case 87:
-                if (!r.collision(p)){
+                if (!r.colisiont(p)){
                     y-=10;
                 }
                 else{
-                    System.out.println("ColArr"+ r.collision(p));
+                    System.out.println("ColArr"+ r.colisiont(p));
                 }
                 break;
             case 65:
@@ -138,19 +160,19 @@ public class PintantdoLaberinto {
                 }
                 break;
             case 83:
-                if (!r.collision(p)){
+                if (!r.colisiontd(p)){
                     y+=10;
                 }
                 else{
-                    System.out.println("ColAb"+r.collision(p));
+                    System.out.println("ColAb"+r.colisiontd(p));
                 }
                 break;
             case 68:
-                if (!r.collision(p)){
+                if (!r.collisionDer(p)){
                     x+=10;
                 }
                 else{
-                    System.out.println("ColDersdd"+r.collision(p));
+                    System.out.println("ColDersdd"+r.collisionDer(p));
                 }
                 break;
         }
