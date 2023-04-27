@@ -32,7 +32,6 @@ public class PintantdoLaberinto {
             g.setColor(p.c);
             g.fillRect(p.x, p.y, p.w, p.h);
             //87,65,83,68
-            colisionesCuatroLados(tecla);
         }
     }
 
@@ -52,17 +51,29 @@ public class PintantdoLaberinto {
                 tecla = e.getKeyCode();
                 int teclaAnterior;
                 if ((e.getKeyCode() == 87 || e.getKeyCode() == 38) && y > 0){
+                    if (!r.colisionArriba(p)){
+                        y-=10;
+                    }
                     System.out.println("ColArr"+colisionArriba);
                 }
                 if ((e.getKeyCode() == 65 || e.getKeyCode() == 37) && x > 0){
+                    if (!r.colisionIzquierda(p)){
+                        x-=10;
+                    }
                     System.out.println("ColIzq"+colisionIzq);
 
                 }
                 if (e.getKeyCode() == 83 && y<430){
+                    if (!r.colisionAbajo(p)){
+                        y+=10;
+                    }
                     System.out.println("ColAb"+colisionAbajo);
 
                 }
                 if (e.getKeyCode() == 68 && x < 450){
+                    if (!r.colisionDerecha(p)){
+                        x+=10;
+                    }
                     System.out.println("ColDersdd"+colisionDer);
 
                 }
@@ -110,14 +121,14 @@ public class PintantdoLaberinto {
             this.h = h;
             this.c = c;
         }
-        public Boolean collision(Rect target){
+        public Boolean colisionIzquierda(Rect target){
             if (this.x < target.x + target.w  +10 && this.x + this.w> target.x
                     && this.y < target.y + target.h  && this.h +this.y > target.y){
                 return true;
             }
             return false;
         }
-        public Boolean collisionDer(Rect target){
+        public Boolean colisionDerecha(Rect target){
             if (this.x < target.x + target.w   && this.x + this.w +10> target.x
                     && this.y < target.y + target.h  && this.h +this.y > target.y){
                 return true;
@@ -125,14 +136,14 @@ public class PintantdoLaberinto {
             return false;
         }
 
-        public Boolean colisiont(Rect target){
+        public Boolean colisionArriba(Rect target){
             if (this.x < target.x + target.w   && this.x + this.w > target.x
                     && this.y < target.y + target.h +10 && this.h +this.y > target.y){
                 return true;
             }
             return false;
         }
-        public Boolean colisiontd(Rect target){
+        public Boolean colisionAbajo(Rect target){
             if (this.x < target.x + target.w   && this.x + this.w > target.x
                     && this.y < target.y + target.h && this.h +this.y  +10 > target.y){
                 return true;
@@ -144,36 +155,12 @@ public class PintantdoLaberinto {
     public void colisionesCuatroLados(int t){
         switch (t){
             case 87:
-                if (!r.colisiont(p)){
-                    y-=10;
-                }
-                else{
-                    System.out.println("ColArr"+ r.colisiont(p));
-                }
                 break;
             case 65:
-                if (!r.collision(p)){
-                    x-=10;
-                }
-                else{
-                    System.out.println("ColIzq"+r.collision(p));
-                }
                 break;
             case 83:
-                if (!r.colisiontd(p)){
-                    y+=10;
-                }
-                else{
-                    System.out.println("ColAb"+r.colisiontd(p));
-                }
                 break;
             case 68:
-                if (!r.collisionDer(p)){
-                    x+=10;
-                }
-                else{
-                    System.out.println("ColDersdd"+r.collisionDer(p));
-                }
                 break;
         }
     }
