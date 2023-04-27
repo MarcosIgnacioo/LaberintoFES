@@ -8,11 +8,16 @@ public class PintantdoLaberinto {
     int x = 0;
     int y = 0;
     int tecla;
-    int width = 500;
-    int heigth = 500;
+    int width = 900;
+    int heigth = 900;
+    boolean colisionIzq = false;
+    boolean colisionDer = false;
+    boolean colisionArriba = false;
+    boolean colisionAbajo = false;
+    Rect p = new Rect(90,50,50,200, Color.BLUE);
+    Rect r;
     public class MyGraphics extends JComponent {
 
-        private static final long serialVersionUID = 1L;
 
         MyGraphics() {
             setPreferredSize(new Dimension(width, heigth));
@@ -20,22 +25,23 @@ public class PintantdoLaberinto {
 
         @Override
         public void paintComponent(Graphics g) {
+            r = new Rect(x,y,10,10, Color.BLACK);
             super.paintComponent(g);
-            Rect r = new Rect(x,y,50,50, Color.BLACK);
-            Rect p = new Rect(90,50,50,200, Color.BLUE);
             g.setColor(r.c);
             g.fillRect(r.x, r.y, r.w, r.h);
             g.setColor(p.c);
             g.fillRect(p.x, p.y, p.w, p.h);
-            System.out.println(r.collision(p));
+            //87,65,83,68
+            colisionesCuatroLados(tecla);
         }
     }
 
     public void createGUI() {
         JPanel panel = new JPanel();
         JFrame frame = new JFrame();
+        JPanel reiniciarP = new JPanel();
         frame.setLayout(new BorderLayout());
-        panel.setBackground(Color.blue);
+        panel.setBackground(Color.RED);
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -43,22 +49,22 @@ public class PintantdoLaberinto {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println(e.getKeyCode());
                 tecla = e.getKeyCode();
                 int teclaAnterior;
                 if ((e.getKeyCode() == 87 || e.getKeyCode() == 38) && y > 0){
-                    y-=10;
+                    System.out.println("ColArr"+colisionArriba);
                 }
                 if ((e.getKeyCode() == 65 || e.getKeyCode() == 37) && x > 0){
-                    x-=10;
+                    System.out.println("ColIzq"+colisionIzq);
+
                 }
                 if (e.getKeyCode() == 83 && y<430){
-                    System.out.println(y+"y");
-                    y+=10;
+                    System.out.println("ColAb"+colisionAbajo);
+
                 }
                 if (e.getKeyCode() == 68 && x < 450){
-                    System.out.println(x+"x");
-                    x+=10;
+                    System.out.println("ColDersdd"+colisionDer);
+
                 }
                 panel.repaint();
                 panel.revalidate();
@@ -69,18 +75,21 @@ public class PintantdoLaberinto {
 
             }
         });
+        JButton reiniciarBtn = new JButton("Reiniciar");
+        reiniciarBtn.setBackground(Color.pink);
         panel.add(new MyGraphics());
-        JPanel reiniciarP = new JPanel();
-        JButton popo = new JButton("asd");
-        popo.setVisible(true);
-        reiniciarP.add(new MyGraphics());
-        reiniciarP.add(popo);
-        reiniciarP.setSize(500,500);
-        reiniciarP.setVisible(true);
+        panel.setPreferredSize(new Dimension(500,500));
+        reiniciarP.setBackground(Color.orange);
         reiniciarP.setBackground(new Color(74, 225, 77));
         reiniciarP.setLayout(new BorderLayout());
+        reiniciarP.add(reiniciarBtn, BorderLayout.CENTER);
+        frame.setFocusable(true);
+        frame.requestFocus();
+        reiniciarP.setPreferredSize(new Dimension(500,100));
+        frame.add(reiniciarP, BorderLayout.SOUTH);
         frame.add(panel, BorderLayout.CENTER);
         frame.setLocationRelativeTo(null);
+        frame.setPreferredSize(new Dimension(900,900));
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,13 +111,49 @@ public class PintantdoLaberinto {
             this.c = c;
         }
         public Boolean collision(Rect target){
-            if (this.x< target.x + target.w && this.x + this.w > target.x
-                    && this.y < target.y + target.h && this.h +this.y > target.y){
+            if (this.x < target.x + target.w  +10 && this.x + this.w+10> target.x
+                    && this.y < target.y + target.h +10 && this.h+10 +this.y > target.y){
                 return true;
             }
             return false;
         }
 
+    }
+    public void colisionesCuatroLados(int t){
+        switch (t){
+            case 87:
+                if (!r.collision(p)){
+                    y-=10;
+                }
+                else{
+                    System.out.println("ColArr"+ r.collision(p));
+                }
+                break;
+            case 65:
+                if (!r.collision(p)){
+                    x-=10;
+                }
+                else{
+                    System.out.println("ColIzq"+r.collision(p));
+                }
+                break;
+            case 83:
+                if (!r.collision(p)){
+                    y+=10;
+                }
+                else{
+                    System.out.println("ColAb"+r.collision(p));
+                }
+                break;
+            case 68:
+                if (!r.collision(p)){
+                    x+=10;
+                }
+                else{
+                    System.out.println("ColDersdd"+r.collision(p));
+                }
+                break;
+        }
     }
 
 
