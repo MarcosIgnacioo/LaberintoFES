@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class PintantdoLaberinto {
 
-    int x = 60;
+    int x = 600;
     int y = 50;
     int tecla;
     int width = 900;
@@ -83,14 +83,14 @@ public class PintantdoLaberinto {
                     System.out.println("ColIzq"+colisionIzq);
 
                 }
-                if (e.getKeyCode() == 83 && y<430){
+                if (e.getKeyCode() == 83 && y<heigth){
                     if (!r.colisionLabAbajo(pLista)){
                         y+=10;
                     }
                     System.out.println("ColAb"+colisionAbajo);
 
                 }
-                if (e.getKeyCode() == 68 && x < 450){
+                if (e.getKeyCode() == 68 && x < width){
                     System.out.println(r.colisionLabDerecha(pLista));
                     if (!r.colisionLabDerecha(pLista)){
                         x+=10;
