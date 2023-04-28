@@ -10,18 +10,23 @@ public class PintantdoLaberinto {
     int tecla;
     int width = 900;
     int heigth = 900;
+    int columnas = 39;
+    int filas = 8;
     boolean colisionIzq = false;
     boolean colisionDer = false;
     boolean colisionArriba = false;
     boolean colisionAbajo = false;
-    Rect p = new Rect(90,50,50,200, Color.BLUE);
-    Rect pDos = new Rect(200,50,50,200, Color.PINK);
 
-    Rect pLista[][] = new Rect[4][4];
     Rect r;
-    int mapa[][] = {{0,0,0,0},
-                    {1,1,0,1},
-                    {1,1,0,1}};
+    int mapa[][] = {{1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1},
+                    };
+
+    Rect pLista[][] = new Rect[filas][columnas];
     public class MyGraphics extends JComponent {
 
 
@@ -35,16 +40,16 @@ public class PintantdoLaberinto {
             super.paintComponent(g);
             g.setColor(r.c);
             g.fillRect(r.x, r.y, r.w, r.h);
-            g.setColor(p.c);
-            g.fillRect(p.x, p.y, p.w, p.h);
-            g.setColor(pDos.c);
-            g.fillRect(pDos.x,pDos.y,pDos.w,pDos.h);
             g.setColor(Color.CYAN);
-            for (int i = 0; i < 4; i++){
-                for (int j = 0; j< mapa.length; j++){
-                    pLista[i][j] = new Rect(j*20, i*20, 10,10, Color.CYAN);
-                    g.fillRect(j*20,i*20,10,10);
+            for (int i = 0; i < mapa.length; i++){
+                for (int j = 0; j< columnas; j++){
+                    if (mapa[i][j] == 1){
+                        pLista[i][j] = new Rect(j*20, i*60, 10,10, Color.CYAN);
+                        g.fillRect(j*20,i*60,10,10);
+                    }
+
                 }
+                System.out.println();
             }
             //87,65,83,68
         }
@@ -66,7 +71,7 @@ public class PintantdoLaberinto {
                 tecla = e.getKeyCode();
                 int teclaAnterior;
                 if ((e.getKeyCode() == 87 || e.getKeyCode() == 38) && y > 0){
-                    if (!r.colisionLabAbajo(pLista)){
+                    if (!r.colisionLabArriba(pLista)){
                         y-=10;
                     }
                     System.out.println("ColArr"+colisionArriba);
@@ -86,6 +91,7 @@ public class PintantdoLaberinto {
 
                 }
                 if (e.getKeyCode() == 68 && x < 450){
+                    System.out.println(r.colisionLabDerecha(pLista));
                     if (!r.colisionLabDerecha(pLista)){
                         x+=10;
                     }
@@ -104,7 +110,7 @@ public class PintantdoLaberinto {
         JButton reiniciarBtn = new JButton("Reiniciar");
         reiniciarBtn.setBackground(Color.pink);
         panel.add(new MyGraphics());
-        panel.setPreferredSize(new Dimension(500,500));
+        panel.setPreferredSize(new Dimension(900,900));
         reiniciarP.setBackground(Color.orange);
         reiniciarP.setBackground(new Color(74, 225, 77));
         reiniciarP.setLayout(new BorderLayout());
@@ -137,39 +143,51 @@ public class PintantdoLaberinto {
             this.c = c;
         }
         public Boolean colisionIzquierda(Rect target){
-            if (this.x < target.x + target.w  +10 && this.x + this.w> target.x
-                    && this.y < target.y + target.h  && this.h +this.y > target.y){
-                return true;
+            if (target != null){
+                if (this.x < target.x + target.w  +10 && this.x + this.w> target.x
+                        && this.y < target.y + target.h  && this.h +this.y > target.y){
+                    return true;
+                }
+                return false;
             }
             return false;
         }
         public Boolean colisionDerecha(Rect target){
+            if (target != null){
             if (this.x < target.x + target.w   && this.x + this.w +10> target.x
                     && this.y < target.y + target.h  && this.h +this.y > target.y){
                 return true;
             }
             return false;
         }
+        return false;
+        }
 
         public Boolean colisionArriba(Rect target){
-            if (this.x < target.x + target.w   && this.x + this.w > target.x
-                    && this.y < target.y + target.h +10 && this.h +this.y > target.y){
-                return true;
+            if (target != null){
+                if (this.x < target.x + target.w   && this.x + this.w > target.x
+                        && this.y < target.y + target.h +10 && this.h +this.y > target.y){
+                    return true;
+                }
+                return false;
             }
             return false;
         }
         public Boolean colisionAbajo(Rect target){
+            if (target != null){
             if (this.x < target.x + target.w   && this.x + this.w > target.x
                     && this.y < target.y + target.h && this.h +this.y  +10 > target.y){
                 return true;
-            }
+                }
             return false;
-        }
+            }
+        return false;
+    }
 
         public Boolean colisionLabArriba(Rect target[][]){
-            for (int i = 0; i < 4; i++){
-                for (int j = 0; j< mapa.length; j++){
-                    if (this.colisionArriba(target[i][j]) == true){
+            for (int i = 0; i < mapa.length; i++){
+                for (int j = 0; j< columnas; j++){
+                    if (this.colisionArriba(target[i][j]) == true && target[i][j] != null){
                         return true;
                     }
                 }
@@ -178,9 +196,9 @@ public class PintantdoLaberinto {
         }
 
         public Boolean colisionLabAbajo(Rect target[][]){
-            for (int i = 0; i < 4; i++){
-                for (int j = 0; j< mapa.length; j++){
-                    if (this.colisionAbajo(target[i][j]) == true){
+            for (int i = 0; i < mapa.length; i++){
+                for (int j = 0; j< columnas; j++){
+                    if (this.colisionAbajo(target[i][j]) == true && target[i][j] != null){
                         return true;
                     }
                 }
@@ -188,9 +206,9 @@ public class PintantdoLaberinto {
             return false;
         }
         public Boolean colisionLabIzquierda(Rect target[][]){
-            for (int i = 0; i < 4; i++){
-                for (int j = 0; j< mapa.length; j++){
-                    if (this.colisionIzquierda(target[i][j]) == true){
+            for (int i = 0; i < mapa.length; i++){
+                for (int j = 0; j< columnas; j++){
+                    if (this.colisionIzquierda(target[i][j]) == true&& target[i][j] != null){
                         return true;
                     }
                 }
@@ -198,9 +216,9 @@ public class PintantdoLaberinto {
             return false;
         }
         public Boolean colisionLabDerecha(Rect target[][]){
-            for (int i = 0; i < 4; i++){
-                for (int j = 0; j< mapa.length; j++){
-                    if (this.colisionDerecha(target[i][j]) == true){
+            for (int i = 0; i < mapa.length; i++){
+                for (int j = 0; j< columnas; j++){
+                    if (this.colisionDerecha(target[i][j]) == true && target[i][j] != null){
                         return true;
                     }
                 }
