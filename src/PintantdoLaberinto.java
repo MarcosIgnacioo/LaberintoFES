@@ -3,7 +3,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import javax.swing.*;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class PintantdoLaberinto {
     JPanel panel = new JPanel();
@@ -15,11 +19,16 @@ public class PintantdoLaberinto {
     int width = 900;
     int heigth = 900;
     int columnas = 50;
-    int filas = 50;
+    int filas = 40;
     boolean colisionIzq = false;
     boolean colisionDer = false;
     boolean colisionArriba = false;
     boolean colisionAbajo = false;
+
+    JLabel tiempoLbl = new JLabel();
+    boolean victoriaMagistral = false;
+    int tiempo = 0;
+
 
     Rect r;
     int mapa[][] = {{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -53,23 +62,12 @@ public class PintantdoLaberinto {
             {1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,0,1,1,1,0,1,0,0,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,1,0,0,0,1,1,0,0,0,1,0,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,0,1,1,0,0,1,0,1,0,0,0,0,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+            {1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1},
-            {1,0,1,1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
-            {1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},};
+            {1,0,1,1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,2,1,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+            {1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+            {1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,2,1,1,1,1,1,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1},
+            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},};
 
     Rect pLista[][] = new Rect[filas][columnas];
     public class MyGraphics extends JComponent {
@@ -109,6 +107,9 @@ public class PintantdoLaberinto {
         JPanel reiniciarP = new JPanel();
         frame.setLayout(new BorderLayout());
         panel.setBackground(Color.RED);
+
+
+
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -163,12 +164,15 @@ public class PintantdoLaberinto {
                 resetearPosicion();
             }
         });
+        tiempoLbl.setFont(new Font("Arial", Font.BOLD, 24));
+        Cronometro.iniciar(tiempoLbl);
         panel.add(new MyGraphics());
         panel.setPreferredSize(new Dimension(900,900));
         reiniciarP.setBackground(Color.orange);
         reiniciarP.setBackground(new Color(74, 225, 77));
         reiniciarP.setLayout(new BorderLayout());
         reiniciarP.add(reiniciarBtn, BorderLayout.CENTER);
+        reiniciarP.add(tiempoLbl, BorderLayout.WEST);
         frame.setFocusable(true);
         frame.requestFocus();
         reiniciarP.setPreferredSize(new Dimension(500,100));
@@ -285,16 +289,45 @@ public class PintantdoLaberinto {
         }
     }
     public void victoriaRoyal(){
-        JOptionPane.showMessageDialog(null, "Ganast", "win", JOptionPane.INFORMATION_MESSAGE);
+        Cronometro.detener();
+        JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
         resetearPosicion();
     }
     public void resetearPosicion(){
+        Cronometro.reiniciar(tiempoLbl);
+        Cronometro.iniciar(tiempoLbl);
         x = 420;
         y = 30;
         panel.repaint();
         panel.revalidate();
         frame.setFocusable(true);
         frame.requestFocus();
+    }
+    public void darkHour(boolean running){
+        final ScheduledExecutorService[] scheduler = {null};
+        if (scheduler[0] == null){
+            scheduler[0] = Executors.newScheduledThreadPool(1);
+        }
+        final ScheduledExecutorService[] finalScheduler = {scheduler[0]};
+        final Runnable runnable = new Runnable() {
+            int countdownStarter = 20;
+
+            public void run() {
+
+                System.out.println(countdownStarter);
+                countdownStarter--;
+
+                if (countdownStarter < 0) {
+                    System.out.println("Timer Over!");
+                    finalScheduler[0] = null;
+                    finalScheduler[0].shutdown();
+                }
+            }
+        };
+        scheduler[0].scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+    }
+    public void theShowIsOver(ScheduledExecutorService scheduler){
+        System.out.println("CAN YOU FEEL THE JAZZ!");
     }
 
     public static void main(String[] args) {
