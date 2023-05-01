@@ -109,8 +109,7 @@ public class PintantdoLaberinto {
     public void createGUI() {
         generaMurosColisionadores();
         frame.setLayout(new BorderLayout());
-        panel.setBackground(Color.decode(
-                "#f9df28"));
+        panel.setBackground(Color.decode("#f9df28"));
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -339,7 +338,7 @@ public class PintantdoLaberinto {
             ap[0].detener();
             JOptionPane.showMessageDialog(null, "100% run en este tiempo padrino se va a reiniciar el juego" + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
             ap[0] = new AudioPlayer("src/layerCakeNever.wav", true);
-
+            panel.setBackground(Color.decode("#f9df28"));
         }
         invertirMatriz(mapa);
         generaMurosColisionadores();
