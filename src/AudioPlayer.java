@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class AudioPlayer {
     Clip clip = null;
-    public AudioPlayer(String cancion) {
+    public AudioPlayer(String cancion, boolean loop) {
         File audioFile = new File(cancion);
         AudioInputStream audioStream = null;
         try {
@@ -27,7 +27,8 @@ public class AudioPlayer {
             throw new RuntimeException(e);
         }
         clip.start();
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        if (loop){
+            clip.loop(Clip.LOOP_CONTINUOUSLY);}
     }
     public void detener(){
         clip.stop();

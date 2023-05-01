@@ -10,10 +10,13 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 public class PintantdoLaberinto {
     JPanel panel = new JPanel();
     JFrame frame = new JFrame();
+    JPanel reiniciarP = new JPanel();
     int nivel = 1;
     Color colorFondos[] = {Color.WHITE,Color.decode("#233535")};
-    Color colorParedes[] = {Color.decode("#21130d"), Color.decode("#21130")};
+    Color colorParedes[] = {Color.decode("#3b3a36"), Color.decode("#3b3a36")};
 
+    final AudioPlayer[] ap = {null};
+    final AudioPlayer[] ap2 = {null};
     int x = 420;
     int y = 30;
     int tecla;
@@ -85,6 +88,7 @@ public class PintantdoLaberinto {
             g.fillRect(r.x, r.y, r.w, r.h);
             g.setColor(Color.black);
             g.drawRect(r.x, r.y, r.w, r.h);
+
             g.setColor(Color.CYAN);
             for (int i = 0; i < mapa.length; i++){
                 for (int j = 0; j< columnas; j++){
@@ -93,7 +97,7 @@ public class PintantdoLaberinto {
                         g.fillRect(j*20,i*20,20,20);
                     }
                     else if (mapa[i][j] == 2){
-                        g.setColor(Color.decode("#F1d637"));
+                        g.setColor(Color.RED);
                         g.fillRect(j*20,i*20,20,20);
                     }
 
@@ -103,20 +107,10 @@ public class PintantdoLaberinto {
     }
 
     public void createGUI() {
-        AudioPlayer ap = null;
-        JPanel reiniciarP = new JPanel();
         generaMurosColisionadores();
         frame.setLayout(new BorderLayout());
         panel.setBackground(Color.decode(
-                "#908a8f"));
-        frame.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                super.mousePressed(e);
-                System.out.println(e.getX() + " " + " y" + e.getY());
-            }
-        });
-
+                "#f9df28"));
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -158,22 +152,26 @@ public class PintantdoLaberinto {
             }
         });
         JButton reiniciarBtn = new JButton("Reiniciar");
-        reiniciarBtn.setBackground(Color.pink);
         reiniciarBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ap2[0] = new AudioPlayer("src/reiniciarSFX.wav",false);
+                ap[0].detener();
+                ap[0] = new AudioPlayer("src/layerCakeNever.wav",true);
                 generaMurosColisionadores();
                 resetearPosicion();
             }
         });
-        tiempoLbl.setFont(new Font("Arial", Font.BOLD, 24));
+        tiempoLbl.setFont(new Font("Arial", Font.BOLD, 30));
+        tiempoLbl.setForeground(Color.WHITE);
+        reiniciarBtn.setFont(new Font("Arial", Font.BOLD, 30));
+        reiniciarBtn.setForeground(Color.BLACK);
         Cronometro.iniciar(tiempoLbl);
         panel.add(new MyGraphics());
         panel.setPreferredSize(new Dimension(900,900));
-        reiniciarP.setBackground(Color.orange);
-        reiniciarP.setBackground(new Color(74, 225, 77));
         reiniciarP.setLayout(new BorderLayout());
-        reiniciarP.add(reiniciarBtn, BorderLayout.CENTER);
+        reiniciarP.setBackground(Color.decode("#3b3a36"));
+        reiniciarP.add(reiniciarBtn, BorderLayout.EAST);
         reiniciarP.add(tiempoLbl, BorderLayout.WEST);
         frame.setFocusable(true);
         frame.requestFocus();
@@ -187,7 +185,7 @@ public class PintantdoLaberinto {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.repaint();
         frame.revalidate();
-        ap = new AudioPlayer("src/layerCakeNever.wav");
+        ap[0] = new AudioPlayer("src/layerCakeNever.wav",true);
 
     }
     public class Rect{
@@ -256,7 +254,7 @@ public class PintantdoLaberinto {
             for (int i = 0; i < mapa.length; i++){
                 for (int j = 0; j< columnas; j++){
                     if (this.colisionArriba(target[i][j]) == true && target[i][j] != null){
-                        if (target[i][j].c.equals(Color.yellow)){
+                        if (target[i][j].c.equals(Color.RED)){
                             victoriaRoyal();
                             return false;
                         }
@@ -271,7 +269,7 @@ public class PintantdoLaberinto {
             for (int i = 0; i < mapa.length; i++){
                 for (int j = 0; j< columnas; j++){
                     if (this.colisionAbajo(target[i][j]) == true && target[i][j] != null){
-                        if (target[i][j].c.equals(Color.yellow)){
+                        if (target[i][j].c.equals(Color.RED)){
                             victoriaRoyal();
                             return false;
                         }
@@ -311,7 +309,7 @@ public class PintantdoLaberinto {
                     //g.fillRect(j*20,i*20,20,20);
                 }
                 else if (mapa[i][j] == 2){
-                    pLista[i][j] = new Rect(j*20, i*20, 20,20, Color.YELLOW);
+                    pLista[i][j] = new Rect(j*20, i*20, 20,20, Color.RED);
                 }
             }
         }
@@ -327,14 +325,20 @@ public class PintantdoLaberinto {
     public void victoriaRoyal(){
         Cronometro.detener();
         if (nivel == 1){
+            ap2[0] = new AudioPlayer("src/ganarSFX.wav",false);
             nivel =2;
             JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
-
+            panel.setBackground(Color.decode("#d7fe0c"));
         }
         else{
+            ap2[0].detener();
+            ap2[0] = new AudioPlayer("src/ganarSFX.wav",false);
             nivel = 1;
             Cronometro.detener();
-            JOptionPane.showMessageDialog(null, "100% run en este tiempo padrino " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
+            ap[0].detener();
+            JOptionPane.showMessageDialog(null, "100% run en este tiempo padrino se va a reiniciar el juego" + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
+            ap[0] = new AudioPlayer("src/layerCakeNever.wav", true);
+
         }
         invertirMatriz(mapa);
         generaMurosColisionadores();

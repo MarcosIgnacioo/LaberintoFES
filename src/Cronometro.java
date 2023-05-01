@@ -19,7 +19,9 @@ public class Cronometro{
                     minutos = 0;
                     horas++;
                 }
-                tiempo.setText(String.format("%02d:%02d:%02d", horas, minutos, segundos));
+                tiempo.setText(String.format("    %02d:%02d:%02d", horas, minutos, segundos));
+                tiempo.setHorizontalAlignment(JLabel.CENTER);
+                tiempo.setVerticalAlignment(JLabel.CENTER);
             }
         });
         timer.start();
@@ -27,7 +29,9 @@ public class Cronometro{
 
     public static void reiniciar(JLabel tiempo) {
         horas = minutos = segundos = 0;
-        tiempo.setText("00:00:00");
+        tiempo.setText("    00:00:00");
+        tiempo.setHorizontalAlignment(JLabel.CENTER);
+        tiempo.setVerticalAlignment(JLabel.CENTER);
         if (timer != null) {
             timer.stop();
         }
