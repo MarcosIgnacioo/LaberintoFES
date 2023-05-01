@@ -185,6 +185,7 @@ public class PintantdoLaberinto {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.repaint();
         frame.revalidate();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         ap[0] = new AudioPlayer("src/layerCakeNever.wav",true);
 
     }
