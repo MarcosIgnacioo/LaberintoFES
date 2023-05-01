@@ -32,7 +32,7 @@ public class PintantdoLaberinto {
     Rect r;
     int mapa[][] = {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1},
+            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1},
             {1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,1,1,1,1,0,0,1,1,1,1},
             {1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1},
             {1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,0,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1},
@@ -64,7 +64,7 @@ public class PintantdoLaberinto {
             {1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,1,1,1,1},
             {1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1},
             {1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1,0,0,0,1},
-            {1,0,1,1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,2,1,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,1,1},
+            {1,0,1,1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,2,1,0,0,0,0,0,0,0,0,1,1,1,0,1,1,0,0,0,0,0,0,0,0,1,1,1},
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},};
 
     Rect pLista[][] = new Rect[filas][columnas];
@@ -167,14 +167,6 @@ public class PintantdoLaberinto {
         reiniciarBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (nivel == 1){
-                    nivel =2;
-                }
-                else{
-                    nivel = 1;
-                }
-                invertirMatriz(mapa);
-
                 generaMurosColisionadores();
                 resetearPosicion();
             }
@@ -337,16 +329,19 @@ public class PintantdoLaberinto {
         }
     }
     public void victoriaRoyal(){
+        Cronometro.detener();
         if (nivel == 1){
             nivel =2;
+            JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
+
         }
         else{
             nivel = 1;
+            Cronometro.detener();
+            JOptionPane.showMessageDialog(null, "100% run en este tiempo padrino " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
         }
         invertirMatriz(mapa);
         generaMurosColisionadores();
-        Cronometro.detener();
-        JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
         resetearPosicion();
     }
     public void resetearPosicion(){
