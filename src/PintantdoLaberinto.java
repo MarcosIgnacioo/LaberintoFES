@@ -11,6 +11,8 @@ public class PintantdoLaberinto {
     JPanel panel = new JPanel();
     JFrame frame = new JFrame();
     int nivel = 1;
+    Color colorFondos[] = {Color.WHITE,Color.decode("#233535")};
+    Color colorParedes[] = {Color.decode("#21130d"), Color.decode("#21130")};
 
     int x = 420;
     int y = 30;
@@ -77,43 +79,36 @@ public class PintantdoLaberinto {
 
         @Override
         public void paintComponent(Graphics g) {
-            r = new Rect(x,y,10,10, Color.BLACK);
+            r = new Rect(x,y,10,10, Color.red);
             super.paintComponent(g);
             g.setColor(r.c);
             g.fillRect(r.x, r.y, r.w, r.h);
+            g.setColor(Color.black);
+            g.drawRect(r.x, r.y, r.w, r.h);
             g.setColor(Color.CYAN);
             for (int i = 0; i < mapa.length; i++){
                 for (int j = 0; j< columnas; j++){
                     if (mapa[i][j] == 1){
-                        if (pLista[i][j] == null){
-                            g.setColor(Color.CYAN);
-                            //pLista[i][j] = new Rect(j*20, i*20, 20,20, Color.CYAN);
-                        }
-                        else{
-                            g.setColor(Color.orange);
-                            //pLista[i][j].weAreSetting(j*20, i*20, 20,20, Color.ORANGE);
-                        }
+                        g.setColor(colorParedes[nivel-1]);
                         g.fillRect(j*20,i*20,20,20);
                     }
                     else if (mapa[i][j] == 2){
-                        g.setColor(Color.yellow);
-                        //pLista[i][j] = new Rect(j*20, i*20, 20,20, Color.YELLOW);
+                        g.setColor(Color.decode("#F1d637"));
                         g.fillRect(j*20,i*20,20,20);
                     }
 
                 }
             }
-
-            System.out.println(pLista[3][3]==null);
-            //87,65,83,68
         }
     }
 
     public void createGUI() {
+        AudioPlayer ap = null;
         JPanel reiniciarP = new JPanel();
         generaMurosColisionadores();
         frame.setLayout(new BorderLayout());
-        panel.setBackground(Color.RED);
+        panel.setBackground(Color.decode(
+                "#908a8f"));
         frame.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -192,6 +187,7 @@ public class PintantdoLaberinto {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.repaint();
         frame.revalidate();
+        ap = new AudioPlayer("src/layerCakeNever.wav");
 
     }
     public class Rect{
