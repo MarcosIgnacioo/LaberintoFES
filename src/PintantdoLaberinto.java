@@ -12,6 +12,8 @@ public class PintantdoLaberinto {
     JFrame frame = new JFrame();
     JPanel reiniciarP = new JPanel();
     int nivel = 1;
+    int nivelAnterior = 1;
+    int nivelActual = 1;
     Color colorFondos[] = {Color.WHITE,Color.decode("#233535")};
     Color colorParedes[] = {Color.decode("#3b3a36"), Color.decode("#3b3a36")};
 
@@ -118,6 +120,7 @@ public class PintantdoLaberinto {
             @Override
             public void keyPressed(KeyEvent e) {
                 tecla = e.getKeyCode();
+                System.out.println(e.getKeyCode());
                 int teclaAnterior;
                 if ((e.getKeyCode() == 87 || e.getKeyCode() == 38)){
                     if (!r.colisionLabArriba(pLista)){
@@ -130,13 +133,13 @@ public class PintantdoLaberinto {
                     }
 
                 }
-                if (e.getKeyCode() == 83){
+                if (e.getKeyCode() == 83 || e.getKeyCode() == 40){
                     if (!r.colisionLabAbajo(pLista)){
                         y+=10;
                     }
 
                 }
-                if (e.getKeyCode() == 68){
+                if (e.getKeyCode() == 68 || e.getKeyCode()==39){
                     if (!r.colisionLabDerecha(pLista)){
                         x+=10;
                     }
@@ -154,11 +157,17 @@ public class PintantdoLaberinto {
         reiniciarBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Random rnd = new Random();
+                int rn = rnd.nextInt(100);
+                System.out.println(rn);
+                if (rn >= 50){
+                    cambiarLab();
+                }
+                resetearPosicion();
+                generaMurosColisionadores();
                 ap2[0] = new AudioPlayer("src/reiniciarSFX.wav",false);
                 ap[0].detener();
                 ap[0] = new AudioPlayer("src/layerCakeNever.wav",true);
-                generaMurosColisionadores();
-                resetearPosicion();
             }
         });
         tiempoLbl.setFont(new Font("Arial", Font.BOLD, 30));
@@ -327,7 +336,7 @@ public class PintantdoLaberinto {
         if (nivel == 1){
             ap2[0] = new AudioPlayer("src/ganarSFX.wav",false);
             nivel =2;
-            JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "WIN", JOptionPane.INFORMATION_MESSAGE);
             panel.setBackground(Color.decode("#d7fe0c"));
         }
         else{
@@ -336,7 +345,7 @@ public class PintantdoLaberinto {
             nivel = 1;
             Cronometro.detener();
             ap[0].detener();
-            JOptionPane.showMessageDialog(null, "100% run en este tiempo padrino se va a reiniciar el juego" + tiempoLbl.getText(), "win", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ganast en este tiempo " + tiempoLbl.getText(), "WIN", JOptionPane.INFORMATION_MESSAGE);
             ap[0] = new AudioPlayer("src/layerCakeNever.wav", true);
             panel.setBackground(Color.decode("#f9df28"));
         }
@@ -359,6 +368,19 @@ public class PintantdoLaberinto {
         panel.revalidate();
         frame.setFocusable(true);
         frame.requestFocus();
+    }
+    public void cambiarLab(){
+        if (nivel == 1){
+            nivel =2;
+            panel.setBackground(Color.decode("#d7fe0c"));
+        }
+        else{
+            nivel = 1;
+            panel.setBackground(Color.decode("#f9df28"));
+        }
+        invertirMatriz(mapa);
+        generaMurosColisionadores();
+        resetearPosicion();
     }
     public void darkHour(boolean running){
         final ScheduledExecutorService[] scheduler = {null};
@@ -386,7 +408,16 @@ public class PintantdoLaberinto {
     public void theShowIsOver(ScheduledExecutorService scheduler){
         System.out.println("CAN YOU FEEL THE JAZZ!");
     }
-
+    public void cambiarPos(){
+        if (nivel == 1){
+            x = 420;
+            y = 30;
+        }
+        else{
+            x = 430;
+            y = 650;
+        }
+    }
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
 
